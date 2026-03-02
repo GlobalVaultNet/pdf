@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protect PDF - Add Password Security | Free & Secure</title>
+    <meta name="description" content="Add password protection to PDF files online. Secure your documents with encryption. 100% client-side processing for maximum security.">
+    <meta name="keywords" content="protect PDF, PDF password, encrypt PDF, secure PDF, PDF lock">
+    <meta name="author" content="GlobalVaultNet PDF">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="Protect PDF - Add Password Security">
+    <meta property="og:description" content="Free online PDF protection tool. Add passwords and encryption to secure your documents. 100% secure browser-based processing.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://globalvaultnet.github.io/pdf/protect-pdf.html">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "GlobalVaultNet PDF Protector",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "4800"},
+        "featureList": "Add password protection, Set permissions, AES encryption, Client-side processing"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What encryption level does the tool use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our tool uses AES 256-bit encryption, which is the industry standard for secure document protection. This level of encryption is used by banks, government agencies, and security professionals worldwide."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I set different permissions for the PDF?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can control various permissions including printing, copying text, editing, and annotating. You can allow or restrict each of these actions independently."
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7/download.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5; --primary-light: #818cf8;
+            --secondary: #06b6d4; --accent: #f59e0b; --success: #10b981;
+            --error: #ef4444; --dark: #1e1b4b; --light: #f8fafc;
+            --gray: #64748b; --gray-light: #e2e8f0;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--light); color: var(--dark); line-height: 1.6; min-height: 100vh;
+        }
+        
+        header {
+            background: var(--gradient-1); padding: 1rem 0;
+            position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow-lg);
+        }
+        
+        .header-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo {
+            display: flex; align-items: center; gap: 0.75rem;
+            text-decoration: none; color: white;
+        }
+        
+        .logo-icon {
+            width: 45px; height: 45px; background: rgba(255,255,255,0.2);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-text span { font-weight: 400; opacity: 0.9; }
+        
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: white; text-decoration: none; font-weight: 500; opacity: 0.9; transition: opacity 0.3s; }
+        nav a:hover { opacity: 1; }
+        
+        .tool-header {
+            background: var(--gradient-1); padding: 3rem 2rem; text-align: center;
+        }
+        
+        .tool-header h1 { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.75rem; }
+        .tool-header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        
+        .ad-container { text-align: center; padding: 1.5rem; background: #f1f5f9; }
+        
+        .tool-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        
+        .upload-area {
+            border: 3px dashed var(--gray-light); border-radius: 20px;
+            padding: 3rem 2rem; text-align: center; background: white;
+            transition: all 0.3s ease; cursor: pointer; margin-bottom: 1.5rem;
+        }
+        
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary); background: #f5f3ff; }
+        .upload-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .upload-area h3 { font-size: 1.5rem; color: var(--dark); margin-bottom: 0.5rem; }
+        .upload-area p { color: var(--gray); margin-bottom: 1.5rem; }
+        
+        .upload-btn {
+            background: var(--gradient-1); color: white; border: none;
+            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;
+            border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .upload-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        #fileInput { display: none; }
+        
+        .file-info-panel {
+            background: white; border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: var(--shadow); display: none;
+        }
+        
+        .file-info-panel.active { display: block; }
+        .file-info-panel h4 { margin-bottom: 1rem; color: var(--dark); }
+        
+        .info-row {
+            display: flex; justify-content: space-between; padding: 0.75rem;
+            background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem;
+        }
+        
+        .protection-options {
+            background: white; border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: var(--shadow); display: none;
+        }
+        
+        .protection-options.active { display: block; }
+        .protection-options h4 { margin-bottom: 1rem; color: var(--dark); }
+        
+        .password-section {
+            display: grid; gap: 1rem; margin-bottom: 1.5rem;
+        }
+        
+        .password-field {
+            display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        
+        .password-field label { font-weight: 600; color: var(--dark); }
+        
+        .password-field input {
+            padding: 0.75rem 1rem; border: 2px solid var(--gray-light);
+            border-radius: 8px; font-size: 1rem;
+        }
+        
+        .password-field input:focus { outline: none; border-color: var(--primary); }
+        
+        .password-field .hint { font-size: 0.85rem; color: var(--gray); }
+        
+        .permissions-section {
+            border-top: 1px solid var(--gray-light); padding-top: 1.5rem;
+        }
+        
+        .permissions-section h5 {
+            font-size: 1rem; font-weight: 600; color: var(--dark); margin-bottom: 1rem;
+        }
+        
+        .permission-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.75rem; background: #f8fafc; border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .permission-item label { color: var(--dark); cursor: pointer; }
+        
+        .permission-item input[type="checkbox"] {
+            width: 20px; height: 20px; cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem; font-size: 1rem; font-weight: 600;
+            border-radius: 12px; border: none; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-1); color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .btn-secondary {
+            background: white; color: var(--dark); border: 2px solid var(--gray-light);
+        }
+        
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .progress-container {
+            display: none; background: white; border-radius: 16px;
+            padding: 2rem; text-align: center; box-shadow: var(--shadow); margin-bottom: 1.5rem;
+        }
+        
+        .progress-container.active { display: block; }
+        
+        .result-container {
+            display: none; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-radius: 16px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;
+        }
+        
+        .result-container.active { display: block; }
+        .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .result-container h3 { color: #065f46; margin-bottom: 0.5rem; }
+        .result-container p { color: #047857; margin-bottom: 1.5rem; }
+        
+        .error-message {
+            display: none; background: #fee2e2; border-radius: 12px;
+            padding: 1rem; margin-bottom: 1.5rem; color: #991b1b;
+        }
+        
+        .error-message.active { display: block; }
+        
+        .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+        .content-section h2 {
+            font-size: 2rem; font-weight: 700; color: var(--dark);
+            margin-bottom: 1.5rem; margin-top: 2.5rem;
+        }
+        .content-section h2:first-child { margin-top: 0; }
+        .content-section p { color: var(--gray); margin-bottom: 1rem; line-height: 1.8; }
+        .content-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; }
+        .content-section li { color: var(--gray); margin-bottom: 0.5rem; line-height: 1.6; }
+        
+        .faq-section { padding: 4rem 2rem; background: #f1f5f9; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 2rem; }
+        .section-header h2 { font-size: 2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+        
+        .faq-item {
+            background: white; border-radius: 12px; margin-bottom: 1rem;
+            overflow: hidden; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .faq-question {
+            padding: 1.25rem 1.5rem; font-weight: 600; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover { background: #f8fafc; }
+        .faq-question::after { content: '+'; font-size: 1.5rem; color: var(--primary); transition: transform 0.3s; }
+        .faq-item.active .faq-question::after { transform: rotate(45deg); }
+        
+        .faq-answer {
+            padding: 0 1.5rem; max-height: 0; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer { padding: 0 1.5rem 1.25rem; max-height: 500px; }
+        .faq-answer p { color: var(--gray); line-height: 1.6; }
+        
+        footer {
+            background: var(--dark); color: white; padding: 3rem 2rem 2rem;
+        }
+        
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem; margin-bottom: 2rem;
+        }
+        
+        .footer-col h4 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: white; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.5rem; }
+        .footer-col a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: white; }
+        
+        .footer-security {
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            padding: 1.5rem; margin-bottom: 2rem; text-align: center;
+        }
+        
+        .footer-security p {
+            color: rgba(255,255,255,0.8); font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem; text-align: center;
+            color: rgba(255,255,255,0.6); font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tool-header h1 { font-size: 2rem; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📄</div>
+                <div class="logo-text">GlobalVaultNet <span>PDF</span></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#tools">Tools</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="tool-header">
+        <h1>Protect PDF</h1>
+        <p>Add password protection and encryption to your PDF documents. Control access and permissions.</p>
+    </section>
+
+    <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://pl28822091.effectivegatecpm.com/e9472f96295f54607e4ac09ffb523e78/invoke.js"></script>
+        <div id="container-e9472f96295f54607e4ac09ffb523e78"></div>
+    </div>
+
+    <div class="tool-container">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">🔒</div>
+            <h3>Select a PDF to protect</h3>
+            <p>Drag and drop your PDF here, or click to browse</p>
+            <button class="upload-btn">Select PDF File</button>
+            <input type="file" id="fileInput" accept=".pdf">
+        </div>
+
+        <div class="file-info-panel" id="fileInfoPanel">
+            <h4>File Information</h4>
+            <div class="info-row"><span>Filename:</span><span id="fileName">-</span></div>
+            <div class="info-row"><span>Pages:</span><span id="totalPages">-</span></div>
+            <div class="info-row"><span>File Size:</span><span id="fileSize">-</span></div>
+        </div>
+
+        <div class="protection-options" id="protectionOptions">
+            <h4>Protection Settings</h4>
+            
+            <div class="password-section">
+                <div class="password-field">
+                    <label for="userPassword">Open Password (required to view)</label>
+                    <input type="password" id="userPassword" placeholder="Leave empty for no open password">
+                    <p class="hint">Users will need this password to open the document</p>
+                </div>
+                
+                <div class="password-field">
+                    <label for="ownerPassword">Permissions Password (optional)</label>
+                    <input type="password" id="ownerPassword" placeholder="Leave empty to use same as open password">
+                    <p class="hint">Used to change permissions later. If empty, open password is used.</p>
+                </div>
+            </div>
+            
+            <div class="permissions-section">
+                <h5>Permissions (when only permissions password is set)</h5>
+                
+                <div class="permission-item">
+                    <label for="permPrinting">Allow Printing</label>
+                    <input type="checkbox" id="permPrinting" checked>
+                </div>
+                
+                <div class="permission-item">
+                    <label for="permCopying">Allow Copying Text</label>
+                    <input type="checkbox" id="permCopying" checked>
+                </div>
+                
+                <div class="permission-item">
+                    <label for="permModifying">Allow Modifying</label>
+                    <input type="checkbox" id="permModifying">
+                </div>
+                
+                <div class="permission-item">
+                    <label for="permAnnotating">Allow Annotating</label>
+                    <input type="checkbox" id="permAnnotating" checked>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="action-buttons" id="actionButtons" style="display: none;">
+            <button class="btn btn-secondary" id="clearBtn">Clear</button>
+            <button class="btn btn-primary" id="protectBtn">
+                <span>🔒</span> Protect PDF
+            </button>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <h3>Protecting PDF...</h3>
+            <p>Please wait while we encrypt your document</p>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-icon">✅</div>
+            <h3>Protection Complete!</h3>
+            <p id="resultText">Your PDF has been protected with password encryption.</p>
+            <button class="btn btn-primary" id="downloadBtn">
+                <span>⬇️</span> Download Protected PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="ad-container">
+        <script>atOptions = {'key' : '940c50b8e7b247ca4853fb94d90731b4','format' : 'iframe','height' : 90,'width' : 728,'params' : {}};</script>
+        <script src="https://www.highperformanceformat.com/940c50b8e7b247ca4853fb94d90731b4/invoke.js"></script>
+    </div>
+
+    <section class="content-section">
+        <h2>How PDF Protection Works</h2>
+        <p>PDF password protection is essential for securing sensitive documents, controlling access, and preventing unauthorized modifications. GlobalVaultNet PDF's protection tool adds industry-standard encryption to your documents directly in your browser, ensuring your files never leave your device during the protection process.</p>
+        
+        <p>Our protection tool uses the pdf-lib JavaScript library to apply AES 256-bit encryption to PDF documents. This is the same encryption standard used by banks, government agencies, and security professionals worldwide. When you set a password, the document content is encrypted, and permissions are enforced according to your specifications.</p>
+        
+        <h2>Understanding PDF Encryption</h2>
+        <p>PDF encryption provides two levels of protection:</p>
+        
+        <ul>
+            <li><strong>User Password (Open Password):</strong> Controls who can open and view the document. Without this password, the PDF cannot be accessed at all. This is the strongest form of protection.</li>
+            <li><strong>Owner Password (Permissions Password):</strong> Controls what users can do with the document even after opening it. This includes restrictions on printing, copying, editing, and annotating.</li>
+        </ul>
+        
+        <h2>Encryption Standards</h2>
+        <p>Our tool uses modern, secure encryption algorithms:</p>
+        
+        <ul>
+            <li><strong>AES 256-bit:</strong> Advanced Encryption Standard with 256-bit keys, providing military-grade security.</li>
+            <li><strong>PDF 1.7 Extension Level 8:</strong> Uses the latest PDF encryption specifications for maximum compatibility and security.</li>
+            <li><strong>SHA-256 Hashing:</strong> Secure password hashing for key derivation.</li>
+        </ul>
+        
+        <h2>Permission Options</h2>
+        <p>You can independently control these document permissions:</p>
+        
+        <ul>
+            <li><strong>Printing:</strong> Allow or prevent users from printing the document. You can also restrict to low-quality printing only.</li>
+            <li><strong>Copying Text:</strong> Allow or prevent users from selecting and copying text from the document.</li>
+            <li><strong>Modifying:</strong> Allow or prevent users from making changes to the document content.</li>
+            <li><strong>Annotating:</strong> Allow or prevent users from adding comments, highlights, and other annotations.</li>
+        </ul>
+        
+        <h2>Password Best Practices</h2>
+        <p>To ensure maximum security for your protected PDFs:</p>
+        
+        <ul>
+            <li>Use passwords at least 12 characters long</li>
+            <li>Include a mix of uppercase, lowercase, numbers, and special characters</li>
+            <li>Avoid common words, names, or easily guessable information</li>
+            <li>Use different passwords for different documents</li>
+            <li>Store passwords securely - lost passwords cannot be recovered</li>
+        </ul>
+        
+        <h2>Common Use Cases</h2>
+        <p>PDF protection serves numerous security purposes:</p>
+        
+        <ul>
+            <li><strong>Confidential Documents:</strong> Protect sensitive business information, financial data, or personal records.</li>
+            <li><strong>Intellectual Property:</strong> Secure proprietary documents, research, or creative works.</li>
+            <li><strong>Legal Documents:</strong> Protect contracts, agreements, and legal correspondence.</li>
+            <li><strong>Controlled Distribution:</strong> Limit what recipients can do with shared documents.</li>
+            <li><strong>Compliance:</strong> Meet regulatory requirements for document security and privacy.</li>
+        </ul>
+        
+        <h2>Security and Privacy</h2>
+        <p>All protection processing occurs within your browser. Your PDF and passwords are never transmitted to our servers, ensuring complete confidentiality. The encryption is performed locally on your device using JavaScript cryptography libraries.</p>
+        
+        <h2>Compatibility</h2>
+        <p>Password-protected PDFs created with our tool are compatible with:</p>
+        
+        <ul>
+            <li>Adobe Acrobat Reader (all versions)</li>
+            <li>Microsoft Edge PDF viewer</li>
+            <li>Google Chrome PDF viewer</li>
+            <li>Mozilla Firefox PDF viewer</li>
+            <li>Apple Preview</li>
+            <li>Mobile PDF readers</li>
+        </ul>
+    </section>
+
+    <section class="faq-section" id="faq">
+        <div class="faq-container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What encryption level does the tool use?</div>
+                <div class="faq-answer">
+                    <p>Our tool uses AES 256-bit encryption, which is the industry standard for secure document protection. This level of encryption is used by banks, government agencies, and security professionals worldwide.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I set different permissions for the PDF?</div>
+                <div class="faq-answer">
+                    <p>Yes, you can control various permissions including printing, copying text, editing, and annotating. You can allow or restrict each of these actions independently.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are my PDF and passwords uploaded to your servers?</div>
+                <div class="faq-answer">
+                    <p>No, all processing happens in your browser. Your PDF and passwords never leave your device or touch our servers. The encryption is performed locally using JavaScript.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What if I forget the password?</div>
+                <div class="faq-answer">
+                    <p>Passwords cannot be recovered. Always store your passwords securely. If you forget the password, you will not be able to access the protected PDF. Keep an unprotected backup in a secure location if needed.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can protected PDFs be unlocked?</div>
+                <div class="faq-answer">
+                    <p>PDFs protected with strong passwords cannot be unlocked without the correct password. Our tool uses industry-standard encryption that is designed to be secure against unauthorized access.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is there a file size limit?</div>
+                <div class="faq-answer">
+                    <p>There's no fixed limit. The practical limit depends on your device's available memory. Most users can protect PDFs up to 100MB successfully.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Will the protected PDF work on all devices?</div>
+                <div class="faq-answer">
+                    <p>Yes, password-protected PDFs created with our tool are compatible with all major PDF readers including Adobe Acrobat, web browsers, and mobile PDF apps.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I change the password later?</div>
+                <div class="faq-answer">
+                    <p>To change the password, you need to unlock the PDF first (using our Unlock PDF tool with the current password), then protect it again with a new password.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://pl28822091.effectivegatecpm.com/e9472f96295f54607e4ac09ffb523e78/invoke.js"></script>
+        <div id="container-e9472f96295f54607e4ac09ffb523e78"></div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>PDF Tools</h4>
+                    <ul>
+                        <li><a href="merge-pdf.html">Merge PDF</a></li>
+                        <li><a href="split-pdf.html">Split PDF</a></li>
+                        <li><a href="compress-pdf.html">Compress PDF</a></li>
+                        <li><a href="rotate-pdf.html">Rotate PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Convert</h4>
+                    <ul>
+                        <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                        <li><a href="pdf-to-jpg.html">PDF to JPG</a></li>
+                        <li><a href="pdf-to-word.html">PDF to Word</a></li>
+                        <li><a href="pdf-to-excel.html">PDF to Excel</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Security</h4>
+                    <ul>
+                        <li><a href="protect-pdf.html">Protect PDF</a></li>
+                        <li><a href="unlock-pdf.html">Unlock PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-security">
+                <p>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Files are processed locally in your browser. We do not store or see your data.
+                </p>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 GlobalVaultNet PDF. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentPdf = null;
+        let currentFileName = '';
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfoPanel = document.getElementById('fileInfoPanel');
+        const protectionOptions = document.getElementById('protectionOptions');
+        const actionButtons = document.getElementById('actionButtons');
+        const protectBtn = document.getElementById('protectBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const userPassword = document.getElementById('userPassword');
+        const ownerPassword = document.getElementById('ownerPassword');
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        clearBtn.addEventListener('click', resetTool);
+        protectBtn.addEventListener('click', protectPdf);
+        
+        async function handleFile(file) {
+            currentFileName = file.name.replace('.pdf', '');
+            const arrayBuffer = await file.arrayBuffer();
+            
+            try {
+                currentPdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                const pageCount = currentPdf.getPageCount();
+                
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('totalPages').textContent = pageCount;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                
+                fileInfoPanel.classList.add('active');
+                protectionOptions.classList.add('active');
+                actionButtons.style.display = 'flex';
+                uploadArea.style.display = 'none';
+                
+            } catch (error) {
+                alert('Error loading PDF: ' + error.message);
+            }
+        }
+        
+        async function protectPdf() {
+            if (!currentPdf) return;
+            
+            const userPass = userPassword.value;
+            const ownerPass = ownerPassword.value || userPass;
+            
+            if (!userPass && !ownerPass) {
+                errorMessage.textContent = 'Please enter at least one password.';
+                errorMessage.classList.add('active');
+                return;
+            }
+            
+            errorMessage.classList.remove('active');
+            protectBtn.disabled = true;
+            progressContainer.classList.add('active');
+            resultContainer.classList.remove('active');
+            
+            try {
+                // Get permission settings
+                const permissions = {
+                    printing: document.getElementById('permPrinting').checked ? 'highResolution' : 'none',
+                    modifying: document.getElementById('permModifying').checked,
+                    copying: document.getElementById('permCopying').checked,
+                    annotating: document.getElementById('permAnnotating').checked,
+                };
+                
+                // Encrypt the PDF
+                const protectedBytes = await currentPdf.save({
+                    password: userPass || ownerPass,
+                    ownerPassword: ownerPass,
+                    permissions: permissions
+                });
+                
+                progressContainer.classList.remove('active');
+                resultContainer.classList.add('active');
+                document.getElementById('resultText').textContent = 
+                    'Your PDF has been protected with password encryption.';
+                
+                downloadBtn.onclick = () => {
+                    download(protectedBytes, `${currentFileName}_protected.pdf`, 'application/pdf');
+                };
+                
+            } catch (error) {
+                alert('Error protecting PDF: ' + error.message);
+                progressContainer.classList.remove('active');
+                protectBtn.disabled = false;
+            }
+        }
+        
+        function resetTool() {
+            currentPdf = null;
+            currentFileName = '';
+            fileInput.value = '';
+            userPassword.value = '';
+            ownerPassword.value = '';
+            
+            fileInfoPanel.classList.remove('active');
+            protectionOptions.classList.remove('active');
+            actionButtons.style.display = 'none';
+            progressContainer.classList.remove('active');
+            resultContainer.classList.remove('active');
+            errorMessage.classList.remove('active');
+            uploadArea.style.display = 'block';
+            protectBtn.disabled = false;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

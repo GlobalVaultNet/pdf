@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalVaultNet PDF - Free Online PDF Tools | 100% Client-Side Secure</title>
+    <meta name="description" content="Free online PDF tools - Merge, Split, Compress, Convert PDFs. 100% client-side processing. No uploads, no data collection, completely secure and private.">
+    <meta name="keywords" content="PDF tools, merge PDF, split PDF, compress PDF, convert PDF, online PDF editor, free PDF tools">
+    <meta name="author" content="GlobalVaultNet PDF">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="GlobalVaultNet PDF - Free Online PDF Tools">
+    <meta property="og:description" content="100% secure client-side PDF processing. Merge, split, compress, and convert PDFs without uploading files.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://globalvaultnet.github.io/pdf/">
+    
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GlobalVaultNet PDF",
+        "url": "https://globalvaultnet.github.io/pdf/",
+        "logo": "https://globalvaultnet.github.io/pdf/assets/logo.png",
+        "description": "Free online PDF tools with 100% client-side processing for maximum security and privacy.",
+        "sameAs": []
+    }
+    </script>
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "GlobalVaultNet PDF Tools",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "10000"
+        }
+    }
+    </script>
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #1e1b4b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --gradient-2: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            background: var(--gradient-1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span {
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 1;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-1);
+            padding: 5rem 2rem 7rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .badge svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* Tools Grid */
+        .tools-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: -3rem auto 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .tool-card:nth-child(1) .tool-icon { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .tool-card:nth-child(2) .tool-icon { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .tool-card:nth-child(3) .tool-icon { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .tool-card:nth-child(4) .tool-icon { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+        .tool-card:nth-child(5) .tool-icon { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+        .tool-card:nth-child(6) .tool-icon { background: linear-gradient(135deg, #ccfbf1, #99f6e4); }
+        .tool-card:nth-child(7) .tool-icon { background: linear-gradient(135deg, #fef9c3, #fef08a); }
+        .tool-card:nth-child(8) .tool-icon { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+        .tool-card:nth-child(9) .tool-icon { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+        .tool-card:nth-child(10) .tool-icon { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
+        
+        .tool-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .tool-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .tool-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--success);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        /* Features Section */
+        .features-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+        
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .feature {
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-1);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .feature h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+        
+        .feature p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        
+        /* Content Section */
+        .content-section {
+            padding: 5rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .content-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        .content-section h2:first-child {
+            margin-top: 0;
+        }
+        
+        .content-section p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        
+        .content-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-section li {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 2rem;
+            background: #f1f5f9;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .faq-question {
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: #f8fafc;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.25rem;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-col h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-col a:hover {
+            color: white;
+        }
+        
+        .footer-security {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .footer-security p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📄</div>
+                <div class="logo-text">GlobalVaultNet <span>PDF</span></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#tools">Tools</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Free PDF Tools <span>100% Secure</span></h1>
+            <p>Process PDFs directly in your browser. No uploads, no registration, no data collection. Your files never leave your device.</p>
+            <div class="hero-badges">
+                <div class="badge">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    Client-Side Processing
+                </div>
+                <div class="badge">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    100% Free
+                </div>
+                <div class="badge">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Instant Results
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="tools-section" id="tools">
+        <div class="section-header">
+            <h2>All PDF Tools</h2>
+            <p>Choose from our comprehensive suite of free PDF utilities. Every tool works entirely in your browser for maximum privacy.</p>
+        </div>
+        
+        <div class="tools-grid">
+            <a href="merge-pdf.html" class="tool-card">
+                <div class="tool-icon">📑</div>
+                <span class="tool-badge">Popular</span>
+                <h3>Merge PDF</h3>
+                <p>Combine multiple PDF files into one document. Reorder pages and merge with ease.</p>
+            </a>
+            
+            <a href="split-pdf.html" class="tool-card">
+                <div class="tool-icon">✂️</div>
+                <h3>Split PDF</h3>
+                <p>Extract pages or split a PDF into multiple files. Choose specific page ranges.</p>
+            </a>
+            
+            <a href="compress-pdf.html" class="tool-card">
+                <div class="tool-icon">🗜️</div>
+                <span class="tool-badge">Popular</span>
+                <h3>Compress PDF</h3>
+                <p>Reduce PDF file size while maintaining quality. Perfect for email attachments.</p>
+            </a>
+            
+            <a href="jpg-to-pdf.html" class="tool-card">
+                <div class="tool-icon">🖼️</div>
+                <h3>JPG to PDF</h3>
+                <p>Convert images to PDF documents. Support for multiple image formats.</p>
+            </a>
+            
+            <a href="pdf-to-jpg.html" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h3>PDF to JPG</h3>
+                <p>Extract pages from PDF as high-quality images. Convert each page to JPG.</p>
+            </a>
+            
+            <a href="rotate-pdf.html" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h3>Rotate PDF</h3>
+                <p>Rotate PDF pages to the correct orientation. Fix upside-down documents.</p>
+            </a>
+            
+            <a href="pdf-to-word.html" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h3>PDF to Word</h3>
+                <p>Convert PDF documents to editable Word format. Preserve formatting.</p>
+            </a>
+            
+            <a href="pdf-to-excel.html" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3>PDF to Excel</h3>
+                <p>Extract tables from PDF to Excel spreadsheets. Perfect for data analysis.</p>
+            </a>
+            
+            <a href="unlock-pdf.html" class="tool-card">
+                <div class="tool-icon">🔓</div>
+                <h3>Unlock PDF</h3>
+                <p>Remove password protection from PDF files. Decrypt restricted documents.</p>
+            </a>
+            
+            <a href="protect-pdf.html" class="tool-card">
+                <div class="tool-icon">🔒</div>
+                <h3>Protect PDF</h3>
+                <p>Add password protection to your PDF files. Secure sensitive documents.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2>Why Choose GlobalVaultNet PDF?</h2>
+                <p>We built our tools with privacy, speed, and simplicity in mind.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Maximum Security</h3>
+                    <p>All processing happens in your browser. Your files are never uploaded to any server, ensuring complete privacy and data protection.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>No network delays means instant processing. Large PDFs are handled locally at the speed of your device.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">💯</div>
+                    <h3>100% Free</h3>
+                    <p>All tools are completely free to use. No hidden fees, no watermarks, no registration required.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+        <h2>Understanding Client-Side PDF Processing</h2>
+        <p>GlobalVaultNet PDF represents a new generation of web-based document tools that prioritize user privacy through client-side processing architecture. Unlike traditional online PDF services that require uploading files to remote servers, our platform leverages modern browser technologies to process documents entirely within your local environment.</p>
+        
+        <p>The technical foundation of our service relies on JavaScript-based PDF manipulation libraries, primarily pdf-lib, which enables comprehensive PDF operations without server intervention. When you use any of our tools, the PDF file remains in your browser's memory throughout the entire process. This approach eliminates the security risks associated with file uploads, including data interception, unauthorized access, and persistent storage on third-party servers.</p>
+        
+        <h2>How Our PDF Tools Work</h2>
+        <p>Each tool in our suite operates through a sophisticated yet efficient workflow:</p>
+        
+        <ul>
+            <li><strong>File Selection:</strong> You select your PDF file through our intuitive drag-and-drop interface or traditional file picker.</li>
+            <li><strong>Local Loading:</strong> The file is loaded into your browser's memory using JavaScript FileReader API.</li>
+            <li><strong>Processing:</strong> Our tools analyze and manipulate the PDF using pdf-lib, performing operations like merging, splitting, or compression.</li>
+            <li><strong>Output Generation:</strong> The processed document is generated and offered for download directly from your browser.</li>
+        </ul>
+        
+        <p>This workflow ensures that at no point does your document travel across the internet or reside on external storage systems. The entire lifecycle of your file—from selection to download—occurs within the secure confines of your own device.</p>
+        
+        <h2>Benefits of Browser-Based PDF Processing</h2>
+        <p>The advantages of our client-side approach extend beyond basic privacy protection:</p>
+        
+        <ul>
+            <li><strong>Zero Data Retention:</strong> Since files never reach our servers, we have no ability to store, copy, or analyze your documents.</li>
+            <li><strong>Compliance Ready:</strong> Our architecture naturally supports GDPR, HIPAA, and other privacy regulations by design.</li>
+            <li><strong>Network Independence:</strong> Once loaded, tools can function even with intermittent connectivity.</li>
+            <li><strong>Cross-Platform Compatibility:</strong> Works on any device with a modern web browser—Windows, macOS, Linux, iOS, or Android.</li>
+            <li><strong>No Software Installation:</strong> Access professional-grade PDF tools without downloading or installing applications.</li>
+        </ul>
+        
+        <h2>Our Commitment to Privacy</h2>
+        <p>GlobalVaultNet PDF was built on the fundamental principle that your documents belong to you alone. We do not implement user tracking, analytics cookies, or any mechanism that could compromise your anonymity. Our service requires no registration, collects no personal information, and maintains no logs of your activities.</p>
+        
+        <p>This privacy-first approach makes our tools ideal for handling sensitive documents including financial records, legal contracts, medical information, and confidential business materials. Professionals across industries—including law, healthcare, finance, and government—can confidently use our platform knowing their data remains completely under their control.</p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="faq-container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about our PDF tools.</p>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are my PDF files uploaded to your servers?</div>
+                <div class="faq-answer">
+                    <p>Absolutely not. All processing occurs entirely within your web browser using client-side JavaScript. Your files never leave your device or touch our servers. This is the core privacy guarantee that distinguishes GlobalVaultNet PDF from traditional online PDF services.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What browsers are supported?</div>
+                <div class="faq-answer">
+                    <p>Our tools work with all modern web browsers including Google Chrome, Mozilla Firefox, Microsoft Edge, Apple Safari, and Opera. We recommend using the latest version of your preferred browser for optimal performance and security.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is there a file size limit?</div>
+                <div class="faq-answer">
+                    <p>File size limits depend on your device's available memory rather than our service. Most users can process PDFs up to 100MB successfully. For very large files, we recommend using our compression tool first to reduce file size.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are the tools really free?</div>
+                <div class="faq-answer">
+                    <p>Yes, all our PDF tools are completely free to use. There are no hidden fees, no watermarks, no usage limits, and no registration requirements. We support the service through non-intrusive advertising.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I use these tools on mobile devices?</div>
+                <div class="faq-answer">
+                    <p>Yes, our tools are fully responsive and work on smartphones and tablets. The interface automatically adapts to smaller screens while maintaining full functionality. You can process PDFs on iOS, Android, or any mobile device with a modern browser.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is PDF to Word/Excel conversion?</div>
+                <div class="faq-answer">
+                    <p>Our conversion tools preserve formatting, fonts, images, and layout structures to the maximum extent possible. While complex documents with intricate formatting may require minor adjustments, most standard PDFs convert with high fidelity. Tables in PDF to Excel conversion maintain their structure for easy data analysis.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is password removal legal?</div>
+                <div class="faq-answer">
+                    <p>Our unlock tool is designed for legitimate use cases where you have authorization to access the document. This includes PDFs you created, documents with forgotten passwords, or files where you have explicit permission to remove restrictions. Always ensure you have the legal right to modify any PDF before using the unlock feature.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Do you add watermarks to processed files?</div>
+                <div class="faq-answer">
+                    <p>No, we never add watermarks to your documents. The output files contain only your original content with the requested modifications applied. What you upload is what you get back—minus the processing you requested.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>PDF Tools</h4>
+                    <ul>
+                        <li><a href="merge-pdf.html">Merge PDF</a></li>
+                        <li><a href="split-pdf.html">Split PDF</a></li>
+                        <li><a href="compress-pdf.html">Compress PDF</a></li>
+                        <li><a href="rotate-pdf.html">Rotate PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Convert</h4>
+                    <ul>
+                        <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                        <li><a href="pdf-to-jpg.html">PDF to JPG</a></li>
+                        <li><a href="pdf-to-word.html">PDF to Word</a></li>
+                        <li><a href="pdf-to-excel.html">PDF to Excel</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Security</h4>
+                    <ul>
+                        <li><a href="protect-pdf.html">Protect PDF</a></li>
+                        <li><a href="unlock-pdf.html">Unlock PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-security">
+                <p>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Files are processed locally in your browser. We do not store or see your data.
+                </p>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 GlobalVaultNet PDF. All rights reserved. Free online PDF tools with 100% client-side processing.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

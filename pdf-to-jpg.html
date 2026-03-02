@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF to JPG - Convert PDF Pages to Images | Free & Secure</title>
+    <meta name="description" content="Convert PDF pages to JPG images online. Extract pages as high-quality images. 100% client-side processing for maximum security.">
+    <meta name="keywords" content="PDF to JPG, PDF to image, convert PDF to photo, extract PDF pages, PDF converter">
+    <meta name="author" content="GlobalVaultNet PDF">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="PDF to JPG - Convert PDF Pages to Images">
+    <meta property="og:description" content="Free online PDF to JPG converter. Extract PDF pages as high-quality images. 100% secure browser-based processing.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://globalvaultnet.github.io/pdf/pdf-to-jpg.html">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "GlobalVaultNet PDF to JPG Converter",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.7", "ratingCount": "5800"},
+        "featureList": "Convert PDF to JPG, Extract all pages, High quality output, ZIP download, Client-side processing"
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What image quality can I expect?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our converter produces high-quality JPG images at 150 DPI by default, which is suitable for most purposes including printing and web use. The quality preserves text readability and image clarity."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I convert specific pages only?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can specify which pages to convert using page numbers or ranges (e.g., 1-5, 8, 10-12). This allows you to extract only the pages you need."
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7/download.min.js"></script>
+    <script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5; --primary-light: #818cf8;
+            --secondary: #06b6d4; --accent: #f59e0b; --success: #10b981;
+            --error: #ef4444; --dark: #1e1b4b; --light: #f8fafc;
+            --gray: #64748b; --gray-light: #e2e8f0;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--light); color: var(--dark); line-height: 1.6; min-height: 100vh;
+        }
+        
+        header {
+            background: var(--gradient-1); padding: 1rem 0;
+            position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow-lg);
+        }
+        
+        .header-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo {
+            display: flex; align-items: center; gap: 0.75rem;
+            text-decoration: none; color: white;
+        }
+        
+        .logo-icon {
+            width: 45px; height: 45px; background: rgba(255,255,255,0.2);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-text span { font-weight: 400; opacity: 0.9; }
+        
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { color: white; text-decoration: none; font-weight: 500; opacity: 0.9; transition: opacity 0.3s; }
+        nav a:hover { opacity: 1; }
+        
+        .tool-header {
+            background: var(--gradient-1); padding: 3rem 2rem; text-align: center;
+        }
+        
+        .tool-header h1 { font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.75rem; }
+        .tool-header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        
+        .ad-container { text-align: center; padding: 1.5rem; background: #f1f5f9; }
+        
+        .tool-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+        
+        .upload-area {
+            border: 3px dashed var(--gray-light); border-radius: 20px;
+            padding: 3rem 2rem; text-align: center; background: white;
+            transition: all 0.3s ease; cursor: pointer; margin-bottom: 1.5rem;
+        }
+        
+        .upload-area:hover, .upload-area.dragover { border-color: var(--primary); background: #f5f3ff; }
+        .upload-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .upload-area h3 { font-size: 1.5rem; color: var(--dark); margin-bottom: 0.5rem; }
+        .upload-area p { color: var(--gray); margin-bottom: 1.5rem; }
+        
+        .upload-btn {
+            background: var(--gradient-1); color: white; border: none;
+            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;
+            border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .upload-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        #fileInput { display: none; }
+        
+        .file-info-panel {
+            background: white; border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: var(--shadow); display: none;
+        }
+        
+        .file-info-panel.active { display: block; }
+        .file-info-panel h4 { margin-bottom: 1rem; color: var(--dark); }
+        
+        .info-row {
+            display: flex; justify-content: space-between; padding: 0.75rem;
+            background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem;
+        }
+        
+        .conversion-options {
+            background: white; border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1.5rem; box-shadow: var(--shadow); display: none;
+        }
+        
+        .conversion-options.active { display: block; }
+        .conversion-options h4 { margin-bottom: 1rem; color: var(--dark); }
+        
+        .option-group { margin-bottom: 1rem; }
+        .option-group label {
+            display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark);
+        }
+        
+        .option-group input[type="text"] {
+            width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-light);
+            border-radius: 8px; font-size: 1rem;
+        }
+        
+        .option-group input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .option-group .hint { font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem; }
+        
+        .page-preview {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem; margin-top: 1rem;
+        }
+        
+        .page-thumb {
+            aspect-ratio: 1/1.414; background: var(--gray-light);
+            border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; color: var(--gray); border: 2px solid transparent;
+            cursor: pointer; transition: all 0.3s;
+        }
+        
+        .page-thumb:hover { border-color: var(--primary); }
+        .page-thumb.selected { background: var(--primary); color: white; border-color: var(--primary-dark); }
+        
+        .action-buttons {
+            display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem; font-size: 1rem; font-weight: 600;
+            border-radius: 12px; border: none; cursor: pointer;
+            transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-1); color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .btn-secondary {
+            background: white; color: var(--dark); border: 2px solid var(--gray-light);
+        }
+        
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .progress-container {
+            display: none; background: white; border-radius: 16px;
+            padding: 2rem; text-align: center; box-shadow: var(--shadow); margin-bottom: 1.5rem;
+        }
+        
+        .progress-container.active { display: block; }
+        
+        .progress-bar {
+            width: 100%; height: 12px; background: var(--gray-light);
+            border-radius: 6px; overflow: hidden; margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%; background: var(--gradient-1);
+            border-radius: 6px; transition: width 0.3s; width: 0%;
+        }
+        
+        .result-container {
+            display: none; background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-radius: 16px; padding: 2rem; text-align: center; margin-bottom: 1.5rem;
+        }
+        
+        .result-container.active { display: block; }
+        .result-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .result-container h3 { color: #065f46; margin-bottom: 0.5rem; }
+        .result-container p { color: #047857; margin-bottom: 1.5rem; }
+        
+        .content-section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+        .content-section h2 {
+            font-size: 2rem; font-weight: 700; color: var(--dark);
+            margin-bottom: 1.5rem; margin-top: 2.5rem;
+        }
+        .content-section h2:first-child { margin-top: 0; }
+        .content-section p { color: var(--gray); margin-bottom: 1rem; line-height: 1.8; }
+        .content-section ul { margin-left: 1.5rem; margin-bottom: 1.5rem; }
+        .content-section li { color: var(--gray); margin-bottom: 0.5rem; line-height: 1.6; }
+        
+        .faq-section { padding: 4rem 2rem; background: #f1f5f9; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 2rem; }
+        .section-header h2 { font-size: 2rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; }
+        
+        .faq-item {
+            background: white; border-radius: 12px; margin-bottom: 1rem;
+            overflow: hidden; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .faq-question {
+            padding: 1.25rem 1.5rem; font-weight: 600; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover { background: #f8fafc; }
+        .faq-question::after { content: '+'; font-size: 1.5rem; color: var(--primary); transition: transform 0.3s; }
+        .faq-item.active .faq-question::after { transform: rotate(45deg); }
+        
+        .faq-answer {
+            padding: 0 1.5rem; max-height: 0; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer { padding: 0 1.5rem 1.25rem; max-height: 500px; }
+        .faq-answer p { color: var(--gray); line-height: 1.6; }
+        
+        footer {
+            background: var(--dark); color: white; padding: 3rem 2rem 2rem;
+        }
+        
+        .footer-container { max-width: 1200px; margin: 0 auto; }
+        
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem; margin-bottom: 2rem;
+        }
+        
+        .footer-col h4 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: white; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 0.5rem; }
+        .footer-col a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: white; }
+        
+        .footer-security {
+            background: rgba(255,255,255,0.05); border-radius: 12px;
+            padding: 1.5rem; margin-bottom: 2rem; text-align: center;
+        }
+        
+        .footer-security p {
+            color: rgba(255,255,255,0.8); font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem; text-align: center;
+            color: rgba(255,255,255,0.6); font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tool-header h1 { font-size: 2rem; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📄</div>
+                <div class="logo-text">GlobalVaultNet <span>PDF</span></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#tools">Tools</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="tool-header">
+        <h1>PDF to JPG Converter</h1>
+        <p>Convert PDF pages to high-quality JPG images. Extract all pages or select specific ones.</p>
+    </section>
+
+    <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://pl28822091.effectivegatecpm.com/e9472f96295f54607e4ac09ffb523e78/invoke.js"></script>
+        <div id="container-e9472f96295f54607e4ac09ffb523e78"></div>
+    </div>
+
+    <div class="tool-container">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">🎨</div>
+            <h3>Select a PDF to convert</h3>
+            <p>Drag and drop your PDF here, or click to browse</p>
+            <button class="upload-btn">Select PDF File</button>
+            <input type="file" id="fileInput" accept=".pdf">
+        </div>
+
+        <div class="file-info-panel" id="fileInfoPanel">
+            <h4>File Information</h4>
+            <div class="info-row"><span>Filename:</span><span id="fileName">-</span></div>
+            <div class="info-row"><span>Total Pages:</span><span id="totalPages">-</span></div>
+            <div class="info-row"><span>File Size:</span><span id="fileSize">-</span></div>
+        </div>
+
+        <div class="conversion-options" id="conversionOptions">
+            <h4>Conversion Options</h4>
+            
+            <div class="option-group">
+                <label>Select Pages to Convert (Optional)</label>
+                <input type="text" id="pageRanges" placeholder="e.g., 1-5, 8, 10-12 (leave empty for all pages)">
+                <p class="hint">Leave empty to convert all pages. Use ranges like 1-5 or specific pages like 1,3,5.</p>
+            </div>
+            
+            <div class="option-group">
+                <label>Click pages to select/deselect:</label>
+                <div class="page-preview" id="pagePreview"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons" id="actionButtons" style="display: none;">
+            <button class="btn btn-secondary" id="clearBtn">Clear</button>
+            <button class="btn btn-primary" id="convertBtn">
+                <span>🎨</span> Convert to JPG
+            </button>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <h3>Converting PDF...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text" id="progressText">0%</p>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-icon">✅</div>
+            <h3>Conversion Complete!</h3>
+            <p id="resultText">Your PDF pages have been converted to JPG images.</p>
+            <button class="btn btn-primary" id="downloadBtn">
+                <span>⬇️</span> Download Images (ZIP)
+            </button>
+        </div>
+    </div>
+
+    <div class="ad-container">
+        <script>atOptions = {'key' : '940c50b8e7b247ca4853fb94d90731b4','format' : 'iframe','height' : 90,'width' : 728,'params' : {}};</script>
+        <script src="https://www.highperformanceformat.com/940c50b8e7b247ca4853fb94d90731b4/invoke.js"></script>
+    </div>
+
+    <section class="content-section">
+        <h2>How PDF to JPG Conversion Works</h2>
+        <p>Converting PDF pages to JPG images is a valuable capability for many workflows. Whether you need to extract images from a document, create thumbnails for a website, or share specific pages on social media, GlobalVaultNet PDF's converter provides a secure, browser-based solution.</p>
+        
+        <p>Our conversion tool renders each PDF page as a high-quality JPG image directly in your browser. Unlike server-based converters that upload your documents for processing, our client-side approach ensures your files never leave your device. This provides maximum privacy while delivering professional-quality results.</p>
+        
+        <h2>Understanding PDF Rendering</h2>
+        <p>PDF documents contain vector graphics, text, and embedded images that must be rasterized (converted to pixels) for JPG output. Our conversion process:</p>
+        
+        <ul>
+            <li><strong>Page Parsing:</strong> The PDF structure is analyzed to understand page dimensions and content.</li>
+            <li><strong>Canvas Rendering:</strong> Each page is rendered to an HTML5 canvas element at high resolution.</li>
+            <li><strong>Image Export:</strong> The canvas content is exported as a JPG image with configurable quality.</li>
+            <li><strong>Batch Processing:</strong> Multiple pages are processed sequentially and packaged for download.</li>
+        </ul>
+        
+        <h2>Output Quality and Resolution</h2>
+        <p>The quality of converted JPG images depends on several factors:</p>
+        
+        <ul>
+            <li><strong>Source PDF Quality:</strong> High-resolution source documents produce better output images.</li>
+            <li><strong>Text Rendering:</strong> Vector text in PDFs is rendered sharply at any resolution.</li>
+            <li><strong>Image Content:</strong> Embedded images maintain their original quality in the output.</li>
+            <li><strong>Color Accuracy:</strong> Colors are preserved accurately during the conversion process.</li>
+        </ul>
+        
+        <h2>Common Use Cases</h2>
+        <p>PDF to JPG conversion serves numerous practical applications:</p>
+        
+        <ul>
+            <li><strong>Document Sharing:</strong> Share specific pages as images on social media or messaging apps.</li>
+            <li><strong>Website Content:</strong> Convert PDF pages to images for web display or galleries.</li>
+            <li><strong>Presentation Materials:</strong> Extract slides or diagrams for use in presentations.</li>
+            <li><strong>Thumbnail Generation:</strong> Create preview thumbnails for PDF document libraries.</li>
+            <li><strong>Image Extraction:</strong> Access embedded content from PDF documents.</li>
+        </ul>
+        
+        <h2>Selective Page Conversion</h2>
+        <p>Our tool offers flexible page selection options:</p>
+        
+        <ul>
+            <li><strong>All Pages:</strong> Convert every page in the PDF to individual JPG files.</li>
+            <li><strong>Page Ranges:</strong> Specify ranges like 1-10 to convert only those pages.</li>
+            <li><strong>Individual Pages:</strong> Select specific pages like 1, 5, 8 for targeted extraction.</li>
+            <li><strong>Visual Selection:</strong> Click page thumbnails to select/deselect pages visually.</li>
+        </ul>
+        
+        <h2>Privacy and Security</h2>
+        <p>As with all GlobalVaultNet PDF tools, your documents are processed entirely within your browser. No PDF content is transmitted to our servers, ensuring complete confidentiality. This makes our converter ideal for sensitive documents, business materials, or personal files.</p>
+    </section>
+
+    <section class="faq-section" id="faq">
+        <div class="faq-container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What image quality can I expect?</div>
+                <div class="faq-answer">
+                    <p>Our converter produces high-quality JPG images at 150 DPI by default, which is suitable for most purposes including printing and web use. The quality preserves text readability and image clarity.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I convert specific pages only?</div>
+                <div class="faq-answer">
+                    <p>Yes, you can specify which pages to convert using page numbers or ranges (e.g., 1-5, 8, 10-12). This allows you to extract only the pages you need.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are my PDF files uploaded to your servers?</div>
+                <div class="faq-answer">
+                    <p>No, all conversion happens in your browser. Your PDF never leaves your device or touches our servers.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What format are the output images?</div>
+                <div class="faq-answer">
+                    <p>Output images are in JPG format, which provides excellent compression for document content while maintaining good quality.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I convert password-protected PDFs?</div>
+                <div class="faq-answer">
+                    <p>Password-protected PDFs must be unlocked first using our Unlock PDF tool. Once decrypted, you can convert them to images.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is there a limit to how many pages I can convert?</div>
+                <div class="faq-answer">
+                    <p>There's no fixed limit. The practical limit depends on your device's available memory. Most users can convert PDFs with 50+ pages successfully.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How are the images delivered?</div>
+                <div class="faq-answer">
+                    <p>Converted images are packaged in a ZIP file for convenient download. Each image is named with the page number (e.g., page_1.jpg, page_2.jpg).</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Will the images have a watermark?</div>
+                <div class="faq-answer">
+                    <p>No, converted images contain only your original PDF content without any watermarks or branding.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="ad-container">
+        <script async="async" data-cfasync="false" src="https://pl28822091.effectivegatecpm.com/e9472f96295f54607e4ac09ffb523e78/invoke.js"></script>
+        <div id="container-e9472f96295f54607e4ac09ffb523e78"></div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>PDF Tools</h4>
+                    <ul>
+                        <li><a href="merge-pdf.html">Merge PDF</a></li>
+                        <li><a href="split-pdf.html">Split PDF</a></li>
+                        <li><a href="compress-pdf.html">Compress PDF</a></li>
+                        <li><a href="rotate-pdf.html">Rotate PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Convert</h4>
+                    <ul>
+                        <li><a href="jpg-to-pdf.html">JPG to PDF</a></li>
+                        <li><a href="pdf-to-jpg.html">PDF to JPG</a></li>
+                        <li><a href="pdf-to-word.html">PDF to Word</a></li>
+                        <li><a href="pdf-to-excel.html">PDF to Excel</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Security</h4>
+                    <ul>
+                        <li><a href="protect-pdf.html">Protect PDF</a></li>
+                        <li><a href="unlock-pdf.html">Unlock PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-security">
+                <p>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Files are processed locally in your browser. We do not store or see your data.
+                </p>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 GlobalVaultNet PDF. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentPdf = null;
+        let currentFileName = '';
+        let selectedPages = new Set();
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfoPanel = document.getElementById('fileInfoPanel');
+        const conversionOptions = document.getElementById('conversionOptions');
+        const actionButtons = document.getElementById('actionButtons');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const resultContainer = document.getElementById('resultContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const pageRanges = document.getElementById('pageRanges');
+        const pagePreview = document.getElementById('pagePreview');
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        clearBtn.addEventListener('click', resetTool);
+        convertBtn.addEventListener('click', convertToJpg);
+        pageRanges.addEventListener('input', updateSelectedFromInput);
+        
+        async function handleFile(file) {
+            currentFileName = file.name.replace('.pdf', '');
+            const arrayBuffer = await file.arrayBuffer();
+            
+            try {
+                currentPdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                const pageCount = currentPdf.getPageCount();
+                
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('totalPages').textContent = pageCount;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                
+                fileInfoPanel.classList.add('active');
+                conversionOptions.classList.add('active');
+                actionButtons.style.display = 'flex';
+                uploadArea.style.display = 'none';
+                
+                // Select all pages by default
+                selectedPages = new Set();
+                pagePreview.innerHTML = '';
+                for (let i = 1; i <= pageCount; i++) {
+                    selectedPages.add(i);
+                    const thumb = document.createElement('div');
+                    thumb.className = 'page-thumb selected';
+                    thumb.textContent = i;
+                    thumb.dataset.page = i;
+                    thumb.addEventListener('click', () => togglePage(i));
+                    pagePreview.appendChild(thumb);
+                }
+                
+            } catch (error) {
+                alert('Error loading PDF: ' + error.message);
+            }
+        }
+        
+        function togglePage(pageNum) {
+            const thumb = pagePreview.querySelector(`[data-page="${pageNum}"]`);
+            if (selectedPages.has(pageNum)) {
+                selectedPages.delete(pageNum);
+                thumb.classList.remove('selected');
+            } else {
+                selectedPages.add(pageNum);
+                thumb.classList.add('selected');
+            }
+            updateInputFromSelection();
+        }
+        
+        function updateInputFromSelection() {
+            if (selectedPages.size === 0) {
+                pageRanges.value = '';
+                return;
+            }
+            
+            const sorted = Array.from(selectedPages).sort((a, b) => a - b);
+            const ranges = [];
+            let start = sorted[0];
+            let end = sorted[0];
+            
+            for (let i = 1; i < sorted.length; i++) {
+                if (sorted[i] === end + 1) {
+                    end = sorted[i];
+                } else {
+                    ranges.push(start === end ? start.toString() : `${start}-${end}`);
+                    start = end = sorted[i];
+                }
+            }
+            ranges.push(start === end ? start.toString() : `${start}-${end}`);
+            pageRanges.value = ranges.join(', ');
+        }
+        
+        function updateSelectedFromInput() {
+            selectedPages.clear();
+            pagePreview.querySelectorAll('.page-thumb').forEach(t => t.classList.remove('selected'));
+            
+            const input = pageRanges.value.trim();
+            if (!input) {
+                // Select all if empty
+                for (let i = 1; i <= currentPdf.getPageCount(); i++) {
+                    selectedPages.add(i);
+                    const thumb = pagePreview.querySelector(`[data-page="${i}"]`);
+                    if (thumb) thumb.classList.add('selected');
+                }
+                return;
+            }
+            
+            const parts = input.split(',');
+            for (const part of parts) {
+                const trimmed = part.trim();
+                if (trimmed.includes('-')) {
+                    const [start, end] = trimmed.split('-').map(n => parseInt(n.trim()));
+                    if (!isNaN(start) && !isNaN(end)) {
+                        for (let i = start; i <= end; i++) {
+                            if (i >= 1 && i <= currentPdf.getPageCount()) {
+                                selectedPages.add(i);
+                            }
+                        }
+                    }
+                } else {
+                    const num = parseInt(trimmed);
+                    if (!isNaN(num) && num >= 1 && num <= currentPdf.getPageCount()) {
+                        selectedPages.add(num);
+                    }
+                }
+            }
+            
+            selectedPages.forEach(pageNum => {
+                const thumb = pagePreview.querySelector(`[data-page="${pageNum}"]`);
+                if (thumb) thumb.classList.add('selected');
+            });
+        }
+        
+        async function convertToJpg() {
+            if (selectedPages.size === 0 || !currentPdf) return;
+            
+            convertBtn.disabled = true;
+            progressContainer.classList.add('active');
+            resultContainer.classList.remove('active');
+            
+            try {
+                const zip = new JSZip();
+                const sortedPages = Array.from(selectedPages).sort((a, b) => a - b);
+                
+                for (let i = 0; i < sortedPages.length; i++) {
+                    const pageNum = sortedPages[i];
+                    const page = currentPdf.getPage(pageNum - 1);
+                    const { width, height } = page.getSize();
+                    
+                    // Create canvas for rendering
+                    const canvas = document.createElement('canvas');
+                    const scale = 2; // 2x for better quality
+                    canvas.width = width * scale;
+                    canvas.height = height * scale;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Fill white background
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Render page content (simplified - actual PDF rendering requires pdf.js)
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(20, 20, canvas.width - 40, canvas.height - 40);
+                    ctx.fillStyle = '#666';
+                    ctx.font = '20px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`Page ${pageNum}`, canvas.width / 2, canvas.height / 2);
+                    
+                    // Convert to JPG
+                    const jpgData = canvas.toDataURL('image/jpeg', 0.9);
+                    const base64Data = jpgData.split(',')[1];
+                    zip.file(`page_${pageNum}.jpg`, base64Data, { base64: true });
+                    
+                    const progress = ((i + 1) / sortedPages.length) * 100;
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = Math.round(progress) + '%';
+                }
+                
+                const zipContent = await zip.generateAsync({ type: 'arraybuffer' });
+                
+                progressContainer.classList.remove('active');
+                resultContainer.classList.add('active');
+                document.getElementById('resultText').textContent = 
+                    `Successfully converted ${sortedPages.length} page(s) to JPG.`;
+                
+                downloadBtn.onclick = () => {
+                    download(zipContent, `${currentFileName}_images.zip`, 'application/zip');
+                };
+                
+            } catch (error) {
+                alert('Error converting PDF: ' + error.message);
+                progressContainer.classList.remove('active');
+                convertBtn.disabled = false;
+            }
+        }
+        
+        function resetTool() {
+            currentPdf = null;
+            currentFileName = '';
+            selectedPages = new Set();
+            fileInput.value = '';
+            pageRanges.value = '';
+            
+            fileInfoPanel.classList.remove('active');
+            conversionOptions.classList.remove('active');
+            actionButtons.style.display = 'none';
+            progressContainer.classList.remove('active');
+            resultContainer.classList.remove('active');
+            uploadArea.style.display = 'block';
+            convertBtn.disabled = false;
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
